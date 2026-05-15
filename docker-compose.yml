@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    image: memory-scramble:latest
+    container_name: memory-scramble
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
