@@ -1,89 +1,94 @@
-"use client";
-
 import { useState } from "react";
-import type { GameConfig } from "@/lib/types";
-import { validateConfig } from "@/lib/validation";
+import type { Difficulty, GameConfig } from "../lib/types";
+import { DIFFICULTY_CONFIGS, DIFFICULTY_DESCRIPTIONS, DIFFICULTY_LABELS } from "../lib/difficulty";
 
 type Props = {
-  defaultConfig: GameConfig;
   onStart: (config: GameConfig) => void;
 };
 
-export function StartScreen({ defaultConfig, onStart }: Props) {
-  const [rows, setRows] = useState(defaultConfig.rows);
-  const [cols, setCols] = useState(defaultConfig.cols);
-  const [timeoutSeconds, setTimeoutSeconds] = useState(
-    defaultConfig.timeoutSeconds,
-  );
-  const [error, setError] = useState<string | null>(null);
+const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const config: GameConfig = { rows, cols, timeoutSeconds };
-    const result = validateConfig(config);
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-    setError(null);
-    onStart(config);
+const DIFFICULTY_ICONS: Record<Difficulty, string> = {
+  easy: "🌱",
+  medium: "🔥",
+  hard: "💀",
+};
+
+const DIFFICULTY_COLORS: Record<Difficulty, { border: string; glow: string; badge: string }> = {
+  easy: { border: "border-emerald-400", glow: "shadow-emerald-500/30", badge: "bg-emerald-500" },
+  medium: { border: "border-amber-400", glow: "shadow-amber-500/30", badge: "bg-amber-500" },
+  hard: { border: "border-rose-400", glow: "shadow-rose-500/30", badge: "bg-rose-500" },
+};
+
+export function StartScreen({ onStart }: Props) {
+  const [selected, setSelected] = useState<Difficulty>("medium");
+
+  function handleStart() {
+    onStart(DIFFICULTY_CONFIGS[selected]);
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-zinc-200 p-6 dark:border-zinc-700"
-    >
-      <h1 className="text-2xl font-semibold">Memory Scramble</h1>
+    <div className="start-screen">
+      <div className="start-container">
+        {/* Title */}
+        <div className="start-header">
+          <div className="brain-icon">🧠</div>
+          <h1 className="game-title">Memory Scramble</h1>
+          <p className="game-subtitle">Find all matching pairs before time runs out</p>
+        </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm">Rows</span>
-        <input
-          type="number"
-          min={2}
-          max={10}
-          value={rows}
-          onChange={(e) => setRows(Number(e.target.value))}
-          className="rounded border border-zinc-300 px-2 py-1 dark:border-zinc-600 dark:bg-zinc-800"
-        />
-      </label>
+        {/* Difficulty picker */}
+        <div className="difficulty-section">
+          <h2 className="section-label">Choose Difficulty</h2>
+          <div className="difficulty-grid">
+            {difficulties.map((diff) => {
+              const colors = DIFFICULTY_COLORS[diff];
+              const isSelected = selected === diff;
+              return (
+                <button
+                  key={diff}
+                  className={`difficulty-card ${isSelected ? `selected ${colors.border} shadow-lg ${colors.glow}` : "unselected"}`}
+                  onClick={() => setSelected(diff)}
+                >
+                  <span className="diff-icon">{DIFFICULTY_ICONS[diff]}</span>
+                  <span className="diff-name">{DIFFICULTY_LABELS[diff]}</span>
+                  <span className="diff-desc">{DIFFICULTY_DESCRIPTIONS[diff]}</span>
+                  {isSelected && (
+                    <span className={`diff-selected-dot ${colors.badge}`} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm">Columns</span>
-        <input
-          type="number"
-          min={2}
-          max={10}
-          value={cols}
-          onChange={(e) => setCols(Number(e.target.value))}
-          className="rounded border border-zinc-300 px-2 py-1 dark:border-zinc-600 dark:bg-zinc-800"
-        />
-      </label>
+        {/* How to play */}
+        <div className="how-to-play">
+          <h2 className="section-label">How to Play</h2>
+          <div className="steps-grid">
+            <div className="step">
+              <span className="step-num">1</span>
+              <span className="step-text">Click any card to reveal it</span>
+            </div>
+            <div className="step">
+              <span className="step-num">2</span>
+              <span className="step-text">Find its matching pair</span>
+            </div>
+            <div className="step">
+              <span className="step-num">3</span>
+              <span className="step-text">Match all pairs to win!</span>
+            </div>
+          </div>
+        </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm">Timeout (seconds)</span>
-        <input
-          type="number"
-          min={10}
-          max={600}
-          value={timeoutSeconds}
-          onChange={(e) => setTimeoutSeconds(Number(e.target.value))}
-          className="rounded border border-zinc-300 px-2 py-1 dark:border-zinc-600 dark:bg-zinc-800"
-        />
-      </label>
-
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
-          {error}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        className="rounded-full bg-zinc-900 px-4 py-2 font-medium text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-      >
-        Start Game
-      </button>
-    </form>
+        <button className="start-btn" onClick={handleStart}>
+          Start Game
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="20" height="20">
+            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 }
+
