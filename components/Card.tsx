@@ -1,6 +1,4 @@
-"use client";
-
-import type { Card as CardModel } from "@/lib/types";
+import type { Card as CardModel } from "../lib/types";
 
 type Props = {
   card: CardModel;
@@ -15,23 +13,39 @@ export function Card({ card, disabled, onFlip }: Props) {
   return (
     <button
       type="button"
-      className="card aspect-square w-full"
+      className={`card-container aspect-square w-full ${isMatched ? "matched" : ""}`}
       onClick={() => onFlip(card.id)}
       disabled={disabled || isMatched}
-      aria-label={isFlipped ? `Card showing ${card.face}` : "Hidden card"}
+      aria-label={isFlipped ? `Card showing ${card.label}` : "Hidden card"}
     >
       <div className={`card-inner ${isFlipped ? "is-flipped" : ""}`}>
-        <div className="card-face bg-zinc-200 dark:bg-zinc-700 text-3xl font-bold text-zinc-500">
-          ?
+        {/* Front face — question mark */}
+        <div className="card-face card-front">
+          <span className="card-question">?</span>
         </div>
-        <div
-          className={`card-face card-back text-4xl sm:text-5xl ${
-            isMatched
-              ? "bg-green-200 dark:bg-green-800"
-              : "bg-zinc-100 dark:bg-zinc-800"
-          }`}
-        >
-          {card.face}
+        {/* Back face — image */}
+        <div className={`card-face card-back ${isMatched ? "card-matched" : ""}`}>
+          <img
+            src={card.face}
+            alt={card.label}
+            className="card-image"
+            draggable={false}
+          />
+          {isMatched && (
+            <div className="card-match-overlay">
+              <svg viewBox="0 0 24 24" fill="none" className="match-check">
+                <circle cx="12" cy="12" r="11" fill="rgba(34,197,94,0.9)" />
+                <path
+                  d="M7 12l3.5 3.5L17 8"
+                  stroke="white"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          )}
+          <span className="card-label">{card.label}</span>
         </div>
       </div>
     </button>
