@@ -25,26 +25,28 @@ export function Card({ card, disabled, onFlip }: Props) {
         </div>
         {/* Back face — image */}
         <div className={`card-face card-back ${isMatched ? "card-matched" : ""}`}>
-          <img
-            src={card.face}
-            alt={card.label}
-            className="card-image"
-            draggable={false}
-          />
-          {isMatched && (
-            <div className="card-match-overlay">
-              <svg viewBox="0 0 24 24" fill="none" className="match-check">
-                <circle cx="12" cy="12" r="11" fill="rgba(34,197,94,0.9)" />
-                <path
-                  d="M7 12l3.5 3.5L17 8"
-                  stroke="white"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          )}
+          <div className="card-image-wrap">
+            <img
+              src={card.face}
+              alt={card.label}
+              className="card-image"
+              draggable={false}
+            />
+            {isMatched && (
+              <div className="card-match-overlay">
+                <svg viewBox="0 0 24 24" fill="none" className="match-check">
+                  <circle cx="12" cy="12" r="11" fill="rgba(34,197,94,0.9)" />
+                  <path
+                    d="M7 12l3.5 3.5L17 8"
+                    stroke="white"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
           <span className="card-label">{card.label}</span>
         </div>
       </div>
