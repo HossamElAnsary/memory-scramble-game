@@ -7,9 +7,9 @@ export type Card = {
   status: CardStatus;
 };
 
-export type GameStatus = "idle" | "playing" | "won" | "lost";
+export type GameStatus = "idle" | "playing" | "paused" | "won" | "lost";
 
-export type Difficulty = "easy" | "medium" | "hard";
+export type Difficulty = "easy" | "medium" | "hard" | "custom";
 
 export type GameConfig = {
   difficulty: Difficulty;

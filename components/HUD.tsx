@@ -3,6 +3,7 @@
 type Props = {
   remainingMs: number;
   moves: number;
+  paused?: boolean;
 };
 
 function formatTime(ms: number): string {
@@ -12,17 +13,21 @@ function formatTime(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-export function HUD({ remainingMs, moves }: Props) {
-  const lowTime = remainingMs <= 10_000;
+export function HUD({ remainingMs, moves, paused = false }: Props) {
+  const lowTime = remainingMs <= 10_000 && !paused;
   return (
-    <div className="flex w-full items-center justify-between px-2 py-3 text-lg font-medium">
+    <div className="hud">
       <span
-        className={lowTime ? "text-red-600 dark:text-red-400" : ""}
+        className={`hud-time ${lowTime ? "hud-time-low" : ""} ${paused ? "hud-paused" : ""}`}
         aria-live="polite"
       >
-        Time: {formatTime(remainingMs)}
+        <span className="hud-label">Time</span>
+        <span className="hud-value">{paused ? "—:—" : formatTime(remainingMs)}</span>
       </span>
-      <span>Moves: {moves}</span>
+      <span className="hud-moves">
+        <span className="hud-label">Moves</span>
+        <span className="hud-value">{moves}</span>
+      </span>
     </div>
   );
 }

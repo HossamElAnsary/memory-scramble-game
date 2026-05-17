@@ -22,11 +22,11 @@ export const IMAGE_POOL: readonly ImageCard[] = [
     label: "Elephant",
   },
   {
-    face: "https://images.pexels.com/photos/46251/brown-bear-bear-wildlife-wilderness-46251.jpeg?auto=compress&cs=tinysrgb&w=200",
+    face: "https://loremflickr.com/200/200/bear?lock=1",
     label: "Bear",
   },
   {
-    face: "https://images.pexels.com/photos/39866/entrepreneur-startup-start-up-man-39866.jpeg?auto=compress&cs=tinysrgb&w=200",
+    face: "https://loremflickr.com/200/200/lion?lock=2",
     label: "Lion",
   },
   {
@@ -34,7 +34,7 @@ export const IMAGE_POOL: readonly ImageCard[] = [
     label: "Panda",
   },
   {
-    face: "https://images.pexels.com/photos/60013/desert-drought-dehydrated-clay-60013.jpeg?auto=compress&cs=tinysrgb&w=200",
+    face: "https://loremflickr.com/200/200/desert?lock=3",
     label: "Desert",
   },
   {
@@ -70,7 +70,7 @@ export const IMAGE_POOL: readonly ImageCard[] = [
     label: "Whale",
   },
   {
-    face: "https://images.pexels.com/photos/158198/pexels-photo-158198.jpeg?auto=compress&cs=tinysrgb&w=200",
+    face: "https://loremflickr.com/200/200/giraffe?lock=4",
     label: "Giraffe",
   },
   {

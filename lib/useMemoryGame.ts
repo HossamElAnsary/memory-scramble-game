@@ -22,6 +22,9 @@ type Action =
   | { type: "FLIP"; id: number }
   | { type: "RESOLVE_PAIR" }
   | { type: "TICK"; deltaMs: number }
+  | { type: "PAUSE" }
+  | { type: "RESUME" }
+  | { type: "RESTART" }
   | { type: "RESET" };
 
 const initialState: State = {
@@ -115,8 +118,33 @@ function reducer(state: State, action: Action): State {
       return { ...state, remainingMs };
     }
 
+    case "PAUSE": {
+      if (state.status !== "playing") return state;
+      return { ...state, status: "paused" };
+    }
+
+    case "RESUME": {
+      if (state.status !== "paused") return state;
+      return { ...state, status: "playing" };
+    }
+
+    case "RESTART": {
+      if (!state.config) return state;
+      const { rows, cols, timeoutSeconds } = state.config;
+      const cards = generateDeck((rows * cols) / 2);
+      return {
+        status: "playing",
+        cards,
+        config: state.config,
+        remainingMs: timeoutSeconds * 1000,
+        moves: 0,
+        firstId: null,
+        awaitingResolution: false,
+      };
+    }
+
     case "RESET":
-      return { ...initialState, config: state.config };
+      return { ...initialState };
 
     default:
       return state;
@@ -127,16 +155,17 @@ export function useMemoryGame() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const resolveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Mismatch resolution timer.
+  // Mismatch resolution timer — only runs while playing so pause holds reveal.
   useEffect(() => {
     if (!state.awaitingResolution) return;
+    if (state.status !== "playing") return;
     resolveTimerRef.current = setTimeout(() => {
       dispatch({ type: "RESOLVE_PAIR" });
     }, MISMATCH_DELAY_MS);
     return () => {
       if (resolveTimerRef.current) clearTimeout(resolveTimerRef.current);
     };
-  }, [state.awaitingResolution]);
+  }, [state.awaitingResolution, state.status]);
 
   // Countdown timer.
   useEffect(() => {
@@ -155,6 +184,9 @@ export function useMemoryGame() {
     moves: state.moves,
     start: (config: GameConfig) => dispatch({ type: "START", config }),
     flip: (id: number) => dispatch({ type: "FLIP", id }),
+    pause: () => dispatch({ type: "PAUSE" }),
+    resume: () => dispatch({ type: "RESUME" }),
+    restart: () => dispatch({ type: "RESTART" }),
     reset: () => dispatch({ type: "RESET" }),
   };
 }
