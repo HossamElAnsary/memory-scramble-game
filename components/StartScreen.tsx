@@ -32,7 +32,7 @@ export function StartScreen({ defaultConfig, onStart }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-zinc-200 p-6 dark:border-zinc-700"
+      className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-indigo-200 p-8 dark:border-indigo-800 shadow-xl"
     >
       <h1 className="text-2xl font-semibold">Memory Scramble</h1>
 
@@ -80,7 +80,7 @@ export function StartScreen({ defaultConfig, onStart }: Props) {
 
       <button
         type="submit"
-        className="rounded-full bg-zinc-900 px-4 py-2 font-medium text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        className="rounded-full bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 transition-colors duration-200 shadow-md"
       >
         Start Game
       </button>
