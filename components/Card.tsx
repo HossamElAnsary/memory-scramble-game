@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Card as CardModel } from "../lib/types";
 
 type Props = {
@@ -26,11 +27,14 @@ export function Card({ card, disabled, onFlip }: Props) {
         {/* Back face — image */}
         <div className={`card-face card-back ${isMatched ? "card-matched" : ""}`}>
           <div className="card-image-wrap">
-            <img
+            <Image
               src={card.face}
               alt={card.label}
+              fill
+              sizes="(max-width: 640px) 25vw, 160px"
               className="card-image"
               draggable={false}
+              unoptimized
             />
             {isMatched && (
               <div className="card-match-overlay">
