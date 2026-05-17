@@ -34,4 +34,40 @@ describe("generateDeck", () => {
       expect(count).toBe(2);
     });
   });
+
+  it("every card has a non-empty label", () => {
+    const deck = generateDeck(5);
+    deck.forEach((card) => {
+      expect(typeof card.label).toBe("string");
+      expect(card.label.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("cards with the same face share the same label", () => {
+    const deck = generateDeck(6);
+    const faceToLabel = new Map<string, string>();
+    for (const card of deck) {
+      const existing = faceToLabel.get(card.face);
+      if (existing === undefined) {
+        faceToLabel.set(card.face, card.label);
+      } else {
+        expect(card.label).toBe(existing);
+      }
+    }
+  });
+
+  it("assigns sequential ids starting at 0", () => {
+    const deck = generateDeck(4);
+    const ids = deck.map((c) => c.id).sort((a, b) => a - b);
+    expect(ids).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+  });
+
+  it("throws for pairCount below 1", () => {
+    expect(() => generateDeck(0)).toThrow();
+    expect(() => generateDeck(-1)).toThrow();
+  });
+
+  it("throws when pairCount exceeds the image pool", () => {
+    expect(() => generateDeck(1000)).toThrow();
+  });
 });
