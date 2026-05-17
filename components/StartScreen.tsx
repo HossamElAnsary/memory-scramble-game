@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { Difficulty, GameConfig } from "../lib/types";
-import { DIFFICULTY_CONFIGS, DIFFICULTY_DESCRIPTIONS, DIFFICULTY_LABELS } from "../lib/difficulty";
+import { DIFFICULTY_CONFIGS, DIFFICULTY_DESCRIPTIONS, DIFFICULTY_LABELS } from "../lib/validation";
 
 type Props = {
+  defaultConfig?: GameConfig;
   onStart: (config: GameConfig) => void;
 };
 
@@ -20,8 +21,8 @@ const DIFFICULTY_COLORS: Record<Difficulty, { border: string; glow: string; badg
   hard: { border: "border-rose-400", glow: "shadow-rose-500/30", badge: "bg-rose-500" },
 };
 
-export function StartScreen({ onStart }: Props) {
-  const [selected, setSelected] = useState<Difficulty>("medium");
+export function StartScreen({ defaultConfig, onStart }: Props) {
+  const [selected, setSelected] = useState<Difficulty>(defaultConfig?.difficulty ?? "medium");
 
   function handleStart() {
     onStart(DIFFICULTY_CONFIGS[selected]);

@@ -9,6 +9,7 @@ import { HUD } from "@/components/HUD";
 import { ResultOverlay } from "@/components/ResultOverlay";
 
 const DEFAULT_CONFIG: GameConfig = {
+  difficulty: "medium",
   rows: 4,
   cols: 4,
   timeoutSeconds: 60,
@@ -51,7 +52,8 @@ export default function Home() {
           moves={game.moves}
           timeoutSeconds={game.config.timeoutSeconds}
           remainingMs={game.remainingMs}
-          onPlayAgain={game.reset}
+          onPlayAgain={() => game.start(lastConfig)}
+          onMenu={game.reset}
         />
       )}
     </main>

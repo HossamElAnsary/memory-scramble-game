@@ -1,5 +1,5 @@
 import type { Card } from "./types";
-import { EMOJI_POOL } from "./emoji";
+import { IMAGE_POOL } from "./emoji";
 
 export function shuffle<T>(input: readonly T[]): T[] {
   const arr = [...input];
@@ -12,17 +12,18 @@ export function shuffle<T>(input: readonly T[]): T[] {
 
 export function generateDeck(pairCount: number): Card[] {
   if (pairCount < 1) throw new Error("pairCount must be >= 1");
-  if (pairCount > EMOJI_POOL.length) {
+  if (pairCount > IMAGE_POOL.length) {
     throw new Error(
-      `pairCount ${pairCount} exceeds emoji pool size ${EMOJI_POOL.length}`,
+      `pairCount ${pairCount} exceeds image pool size ${IMAGE_POOL.length}`,
     );
   }
-  const faces = shuffle(EMOJI_POOL).slice(0, pairCount);
-  const doubled = faces.flatMap((face) => [face, face]);
+  const faces = shuffle(IMAGE_POOL).slice(0, pairCount);
+  const doubled = faces.flatMap((image) => [image, image]);
   const shuffled = shuffle(doubled);
-  return shuffled.map((face, index) => ({
+  return shuffled.map((image, index) => ({
     id: index,
-    face,
+    face: image.face,
+    label: image.label,
     status: "hidden",
   }));
 }
